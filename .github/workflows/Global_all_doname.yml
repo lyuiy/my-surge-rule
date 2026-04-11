@@ -20,7 +20,7 @@ jobs:
       - name: Download and Merge
         run: |
           # 1. 全球代理-链接大全
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_Domain.list" > temp.txt
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" > temp.txt
           
           # 2.  B站 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
