@@ -1,8 +1,8 @@
 name: Sync Rules
 on:
   schedule:
-    - cron: '0 20 * * *' # 每天北京时间凌晨4点自动运行
-  workflow_dispatch:      # 支持手动触发
+    - cron: '0 20 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,22 +19,20 @@ jobs:
 
       - name: Download and Merge
         run: |
-          # 1. 下载你提供的链接，并保留你的注释作为脚本记录
+          # 1. 下载你指定的 China_Domain 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_Domain.list" > temp.txt
           
-          # 中国直连
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
+          # 2. 下载 B站 链接
+          curl -sL --retry 3 "https://githubusercontent.com" >> temp.txt
           
-          # B站
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+          # 3. 处理逻辑：
+          # - 排除注释 (#) 和 空行
+          # - 排除 IP-CIDR (确保代理走远端 DNS)
+          # - 兼容纯域名、带点的域名和 DOMAIN 前缀
+          # - 去掉策略尾缀并去重
+          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > cn_merged.txt || true
           
-          # 2. 格式化处理
-          # - 提取包含 DOMAIN 的有效行
-          # - 去掉后缀 ,DIRECT（Surge RULE-SET 引用时会统一指定策略）
-          # - 排序并去重
-          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt || true
-          
-          # 日志输出行数，方便确认文件不是空的
-          echo "合并完成，当前总规则行数："
+          echo "合并完成，总行数如下："
           wc -l cn_merged.txt
 
       - name: Push to Repository
@@ -42,5 +40,4 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add cn_merged.txt
-          # 检查是否有内容变更，有则提交并推送
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
