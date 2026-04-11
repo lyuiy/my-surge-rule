@@ -30,7 +30,7 @@ jobs:
           # - 排除 IP-CIDR (确保代理走远端 DNS)
           # - 兼容纯域名、带点的域名和 DOMAIN 前缀
           # - 去掉策略尾缀并去重
-          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > cn_merged.txt || true
+          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > GL_merged.txt || true
           
           echo "合并完成，总行数如下："
           wc -l GL_merged.txt
