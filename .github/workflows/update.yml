@@ -22,10 +22,16 @@ jobs:
           # 1. 下载你提供的链接，并保留你的注释作为脚本记录
           
           # 中国直连
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
+          curl -sL --retry 3 "https://github.com/blackmatrix7/ios_rule_script/blob/master/rule/Surge/China/China_All_No_Resolve.list" > temp.txt
           
           # B站
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+          # 知乎
+
+          curl -sL --retry 3 "https://github.com/blackmatrix7/ios_rule_script/blob/master/rule/Surge/Zhihu/Zhihu.list" > temp.txt
+
+          
+
           
           # 2. 格式化处理
           # - 提取包含 DOMAIN 的有效行
