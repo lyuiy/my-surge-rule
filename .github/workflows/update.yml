@@ -17,18 +17,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Download and Merge
         run: |
-          # 下载并合并，增加错误检查
-          curl -sL "hhttps://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt || echo "Download Bili failed"
-          #curl -sL "https://githubusercontent.com" >> temp.txt || echo "Download China failed"
+          # 1. 下载并合并
+          curl -sL "hhttps://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
+          #curl -sL "https://githubusercontent.com" >> temp.txt
           
-          # 核心修复：添加 || true 防止 grep 找不到内容时报错退出
-          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt || true
-          
-          # 看看有没有生成文件，方便调试
-          ls -l cn_merged.txt
+          # 2. 改进的提取逻辑：
+          # - 去掉注释行 (#)
+          # - 去掉空行
+          # - 去掉每行末尾的 ,DIRECT
+          # - 只保留看起来像域名或规则的内容
+          grep -v '^#' temp.txt | grep -v '^$' | sed 's/,DIRECT//g' | sort -u > cn_merged.txt
+
 
       - name: Push to Repository
         run: |
