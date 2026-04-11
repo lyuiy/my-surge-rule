@@ -1,0 +1,33 @@
+name: Sync Rules
+on:
+  schedule:
+    - cron: '0 20 * * *' # 每天北京时间凌晨4点运行
+  workflow_dispatch:      # 允许你手动点击运行
+
+jobs:
+  merge_rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download and Merge
+        run: |
+          # 1. B站
+          curl -sL https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list > temp.txt
+          curl -sL https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list >> temp.txt
+          # curl -sL https://githubusercontent.com >> temp.txt
+          
+          # 2. 处理格式：
+          # 只要域名规则（DOMAIN/DOMAIN-SUFFIX/DOMAIN-KEYWORD）
+          # 去掉每行末尾的 ,DIRECT（因为 Surge RULE-SET 引用时统一指定 DIRECT 即可）
+          # 去重并排序
+          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt
+
+      - name: Push to Repository
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add cn_merged.txt
+          git commit -m "Updated at $(date)" || exit 0
+          git push
