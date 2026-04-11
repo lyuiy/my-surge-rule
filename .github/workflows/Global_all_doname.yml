@@ -33,11 +33,11 @@ jobs:
           grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > cn_merged.txt || true
           
           echo "合并完成，总行数如下："
-          wc -l cn_merged.txt
+          wc -l GL_merged.txt
 
       - name: Push to Repository
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add cn_merged.txt
+          git add GL_merged.txt
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
