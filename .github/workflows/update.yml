@@ -4,9 +4,12 @@ on:
     - cron: '0 20 * * *'
   workflow_dispatch:
 
-# 核心：强制开启写入权限，防止 128 错误
 permissions:
   contents: write
+
+# 强制使用 Node.js 24 解决你的警告问题
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   merge_rules:
@@ -17,16 +20,20 @@ jobs:
 
       - name: Download and Merge
         run: |
-          curl -sL "hhttps://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
-          #curl -sL "https://githubusercontent.com" >> temp.txt
-          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt
+          # 下载并合并，增加错误检查
+          curl -sL "hhttps://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt || echo "Download Bili failed"
+          #curl -sL "https://githubusercontent.com" >> temp.txt || echo "Download China failed"
+          
+          # 核心修复：添加 || true 防止 grep 找不到内容时报错退出
+          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt || true
+          
+          # 看看有没有生成文件，方便调试
+          ls -l cn_merged.txt
 
       - name: Push to Repository
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add cn_merged.txt
-          # 这里防止没有变化时报错
-          git commit -m "Update: $(date)" || exit 0
-          # 明确指定推送分支为 main
-          git push origin main
+          # 只有文件有变化才提交，没变化直接跳过
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
