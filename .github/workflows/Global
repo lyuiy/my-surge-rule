@@ -1,0 +1,43 @@
+name: Sync Rules
+on:
+  schedule:
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  merge_rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download and Merge
+        run: |
+          # 1. 全球代理-链接大全
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_Domain.list" > temp.txt
+          
+          # 2.  B站 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+          
+          # 3. 处理逻辑：
+          # - 排除注释 (#) 和 空行
+          # - 排除 IP-CIDR (确保代理走远端 DNS)
+          # - 兼容纯域名、带点的域名和 DOMAIN 前缀
+          # - 去掉策略尾缀并去重
+          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > cn_merged.txt || true
+          
+          echo "合并完成，总行数如下："
+          wc -l cn_merged.txt
+
+      - name: Push to Repository
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add cn_merged.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
