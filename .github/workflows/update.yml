@@ -1,13 +1,12 @@
 name: Sync Rules
 on:
   schedule:
-    - cron: '0 20 * * *'
-  workflow_dispatch:
+    - cron: '0 20 * * *' # 每天北京时间凌晨4点自动运行
+  workflow_dispatch:      # 支持手动触发
 
 permissions:
   contents: write
 
-# 强制使用 Node.js 24 解决你的警告问题
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -17,24 +16,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Download and Merge
         run: |
-          # 1. 下载并合并
-          curl -sL "hhttps://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
-          #curl -sL "https://githubusercontent.com" >> temp.txt
+          # 1. 下载你提供的链接，并保留你的注释作为脚本记录
           
-          # 2. 改进的提取逻辑：
-          # - 去掉注释行 (#)
-          # - 去掉空行
-          # - 去掉每行末尾的 ,DIRECT
-          # - 只保留看起来像域名或规则的内容
-          grep -v '^#' temp.txt | grep -v '^$' | sed 's/,DIRECT//g' | sort -u > cn_merged.txt
-
+          # 中国直连
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China.list" > temp.txt
+          
+          # B站
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+          
+          # 2. 格式化处理
+          # - 提取包含 DOMAIN 的有效行
+          # - 去掉后缀 ,DIRECT（Surge RULE-SET 引用时会统一指定策略）
+          # - 排序并去重
+          grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD)' temp.txt | sed 's/,DIRECT//g' | sort -u > cn_merged.txt || true
+          
+          # 日志输出行数，方便确认文件不是空的
+          echo "合并完成，当前总规则行数："
+          wc -l cn_merged.txt
 
       - name: Push to Repository
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add cn_merged.txt
-          # 只有文件有变化才提交，没变化直接跳过
+          # 检查是否有内容变更，有则提交并推送
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
