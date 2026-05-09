@@ -51,7 +51,6 @@ DOMAIN,analytics.strava.com
 DOMAIN,apd-pcdnwxlogin.teg.tencent-cloud.net
 DOMAIN,blzddist1-a.akamaihd.net
 DOMAIN,cdn.angruo.com
-DOMAIN,cdn.lilyemby.com
 DOMAIN,client.amplifi.com
 DOMAIN,dldir1.qq.com
 DOMAIN,download.jetbrains.com
@@ -66,11 +65,9 @@ DOMAIN,origin-a.akamaihd.net
 DOMAIN,p-bstarstatic.akamaized.net
 DOMAIN,p.bstarstatic.com
 DOMAIN,slife.xy-asia.com
-DOMAIN,smart.uhdnow.com
 DOMAIN,sms.imagetasks.com
 DOMAIN,soup.v.qq.com
 DOMAIN,steamcommunity-a.akamaihd.net
-DOMAIN,tx.lilyemby.com
 DOMAIN,upos-bstar-mirrorakam.akamaized.net
 DOMAIN,upos-bstar1-mirrorakam.akamaized.net
 DOMAIN,v5-dy-o-abtest.zjcdn.com
@@ -3037,7 +3034,6 @@ DOMAIN-SUFFIX,jiayuan.com
 DOMAIN-SUFFIX,jiazhao.com
 DOMAIN-SUFFIX,jibencaozuo.com
 DOMAIN-SUFFIX,jidian.im
-DOMAIN-SUFFIX,jiedaibao.gs
 DOMAIN-SUFFIX,jiemeng8.com
 DOMAIN-SUFFIX,jiemian.com
 DOMAIN-SUFFIX,jikeiot.cloud
