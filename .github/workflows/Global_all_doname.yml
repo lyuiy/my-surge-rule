@@ -40,6 +40,9 @@ jobs:
           # 7.  discord 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
 
+          # 7.  github 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list" >> temp.txt
+
 
           
           
