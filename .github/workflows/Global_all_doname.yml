@@ -22,15 +22,33 @@ jobs:
           # 1. 全球代理-链接大全
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" > temp.txt
           
-          # 2.  B站 链接
-          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+          # 2.  谷歌 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Google/Google.list" >> temp.txt
+
+          # 3.  YouTube 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/YouTube/YouTube.list" >> temp.txt
+
+          # 4.  Tiktok 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TikTok/TikTok.list" >> temp.txt
+
+          # 5.  telegram 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Telegram/Telegram.list" >> temp.txt
+
+          # 6.  discord 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
+
+          # 7.  discord 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
+
+
+          
           
           # 3. 处理逻辑：
           # - 排除注释 (#) 和 空行
           # - 排除 IP-CIDR (确保代理走远端 DNS)
           # - 兼容纯域名、带点的域名和 DOMAIN 前缀
           # - 去掉策略尾缀并去重
-          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > GL_merged.txt || true
+          grep -v '^#' temp.txt | grep -v '^$' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > GL_merged.txt || true
           
           echo "合并完成，总行数如下："
           wc -l GL_merged.txt
