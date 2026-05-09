@@ -24,6 +24,27 @@ jobs:
           
           # 2.  B站 链接
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
+
+          # 3.  Alibaba 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Alibaba/Alibaba_All_No_Resolve.list" >> temp.txt
+
+          # 4.  Douyin 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/DouYin/DouYin.list" >> temp.txt
+
+          # 5.  支付宝 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AliPay/AliPay.list" >> temp.txt
+
+          # 6.  京东 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/JingDong/JingDong.list" >> temp.txt
+
+           # 7.  美团 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/MeiTuan/MeiTuan.list" >> temp.txt
+
+          # 8.  闲鱼 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XianYu/XianYu.list" >> temp.txt
+
+           # 8.  微信 链接
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list" >> temp.txt
           
           # 3. 处理逻辑：
           # - 排除注释 (#) 和 空行
