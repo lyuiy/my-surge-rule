@@ -1,4 +1,5 @@
 name: Sync Rules
+
 on:
   schedule:
     - cron: '0 20 * * *'
@@ -13,52 +14,74 @@ env:
 jobs:
   merge_rules:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Download and Merge
         run: |
-          # 1. 下载你指定的 China_Domain 链接
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All.list" > temp.txt
-          
-          # 2.  B站 链接
+          rm -f temp.txt cn_merged.txt
+
+          # 1. China_All
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All.list" >> temp.txt
+
+          # 2. BiliBili
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list" >> temp.txt
 
-          # 3.  Alibaba 链接
+          # 3. Alibaba
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Alibaba/Alibaba_All_No_Resolve.list" >> temp.txt
 
-          # 4.  Douyin 链接
+          # 4. Douyin
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/DouYin/DouYin.list" >> temp.txt
 
-          # 5.  支付宝 链接
+          # 5. AliPay
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AliPay/AliPay.list" >> temp.txt
 
-          # 6.  京东 链接
+          # 6. JingDong
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/JingDong/JingDong.list" >> temp.txt
 
-           # 7.  美团 链接
+          # 7. MeiTuan
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/MeiTuan/MeiTuan.list" >> temp.txt
 
-          # 8.  闲鱼 链接
+          # 8. XianYu
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XianYu/XianYu.list" >> temp.txt
 
-           # 8.  微信 链接
+          # 9. WeChat
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list" >> temp.txt
-          
-          # 3. 处理逻辑：
-          # - 排除注释 (#) 和 空行
-          # - 排除 IP-CIDR (确保代理走远端 DNS)
-          # - 兼容纯域名、带点的域名和 DOMAIN 前缀
-          # - 去掉策略尾缀并去重
-          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > cn_merged.txt || true
-          
+
+          # 处理逻辑：
+          # - 删除注释和空行
+          # - 保留 DOMAIN / DOMAIN-SUFFIX / DOMAIN-KEYWORD / IP-CIDR / IP-CIDR6 等 Surge 规则
+          # - 保留 IP-CIDR 后面的 no-resolve
+          # - 去掉可能存在的策略字段 DIRECT / REJECT / PROXY
+          # - 修复极少数情况下 no-resolveIP-CIDR 被拼接到一行的问题
+          # - 去重排序
+          sed 's/\r$//' temp.txt \
+            | sed 's/no-resolveIP-CIDR/no-resolve\nIP-CIDR/g' \
+            | grep -v '^[[:space:]]*#' \
+            | grep -v '^[[:space:]]*$' \
+            | sed 's/,DIRECT//g' \
+            | sed 's/,REJECT//g' \
+            | sed 's/,PROXY//g' \
+            | sort -u > cn_merged.txt || true
+
           echo "合并完成，总行数如下："
           wc -l cn_merged.txt
+
+          echo "IP-CIDR 规则数量如下："
+          grep -E '^IP-CIDR,|^IP-CIDR6,' cn_merged.txt | wc -l || true
 
       - name: Push to Repository
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
+
           git add cn_merged.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update: $(date)" && git push origin main)
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update: $(date)"
+            git push origin main
+          fi
