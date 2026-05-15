@@ -40,8 +40,17 @@ jobs:
           # 7.  discord 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
 
-          # 7.  github 链接
+          # 8.  github 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list" >> temp.txt
+
+          # 9.  github 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Gemini/Gemini.list" >> temp.txt
+
+          # 10.  Cloudflare 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Cloudflare/Cloudflare.list" >> temp.txt
+
+          # 11.  Twitter 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Twitter/Twitter.list" >> temp.txt
 
 
           
@@ -51,7 +60,7 @@ jobs:
           # - 排除 IP-CIDR (确保代理走远端 DNS)
           # - 兼容纯域名、带点的域名和 DOMAIN 前缀
           # - 去掉策略尾缀并去重
-          grep -v '^#' temp.txt | grep -v '^$' | grep -v 'IP-CIDR' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > GL_merged.txt || true
+          grep -v '^#' temp.txt | grep -v '^$' | sed 's/,DIRECT//g' | sed 's/,REJECT//g' | sort -u > GL_merged.txt || true
           
           echo "合并完成，总行数如下："
           wc -l GL_merged.txt
