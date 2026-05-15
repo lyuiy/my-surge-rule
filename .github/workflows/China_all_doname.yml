@@ -50,6 +50,12 @@ jobs:
           # 9. WeChat
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list" >> temp.txt
 
+          # 10. ChinaIPs
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs.list" >> temp.txt
+
+          # 11. ChinaIPsBGP
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPsBGP/ChinaIPsBGP.list" >> temp.txt
+
           # 生成 Surge 可用规则 cn_merged.txt
           # 处理逻辑：
           # - 删除 Windows 换行符
