@@ -19,9 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download and Merge
+      - name: Download and Merge Surge Rules
         run: |
-          rm -f temp.txt cn_merged.txt
+          rm -f temp.txt cn_merged.txt v2rayn_cn_direct.json
 
           # 1. China_All
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All.list" >> temp.txt
@@ -50,21 +50,17 @@ jobs:
           # 9. WeChat
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list" >> temp.txt
 
-          # 10. ChinaIPs
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs.list" >> temp.txt
-
-          # 11. ChinaIPsBGP
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPsBGP/ChinaIPsBGP.list" >> temp.txt
-
+          # 生成 Surge 可用规则 cn_merged.txt
           # 处理逻辑：
+          # - 删除 Windows 换行符
+          # - 修复极少数情况下 no-resolveIP-CIDR 被拼接的问题
           # - 删除注释和空行
-          # - 保留 DOMAIN / DOMAIN-SUFFIX / DOMAIN-KEYWORD / IP-CIDR / IP-CIDR6 等 Surge 规则
-          # - 保留 IP-CIDR 后面的 no-resolve
-          # - 去掉可能存在的策略字段 DIRECT / REJECT / PROXY
-          # - 修复极少数情况下 no-resolveIP-CIDR 被拼接到一行的问题
+          # - 去掉策略字段 DIRECT / REJECT / PROXY
+          # - 保留 DOMAIN / DOMAIN-SUFFIX / DOMAIN-KEYWORD / IP-CIDR / IP-CIDR6
           # - 去重排序
           sed 's/\r$//' temp.txt \
             | sed 's/no-resolveIP-CIDR/no-resolve\nIP-CIDR/g' \
+            | sed 's/no-resolveIP-CIDR6/no-resolve\nIP-CIDR6/g' \
             | grep -v '^[[:space:]]*#' \
             | grep -v '^[[:space:]]*$' \
             | sed 's/,DIRECT//g' \
@@ -72,22 +68,107 @@ jobs:
             | sed 's/,PROXY//g' \
             | sort -u > cn_merged.txt || true
 
-          echo "合并完成，总行数如下："
+          echo "Surge 规则生成完成：cn_merged.txt"
+          echo "总规则数量："
           wc -l cn_merged.txt
 
-          echo "IP-CIDR 规则数量如下："
+          echo "IP-CIDR 规则数量："
           grep -E '^IP-CIDR,|^IP-CIDR6,' cn_merged.txt | wc -l || true
+
+      - name: Convert Surge Rules to v2rayN JSON
+        run: |
+          python3 <<'PY'
+          import json
+
+          input_file = "cn_merged.txt"
+          output_file = "v2rayn_cn_direct.json"
+
+          domains = set()
+          ips = set()
+
+          with open(input_file, "r", encoding="utf-8") as f:
+              for raw_line in f:
+                  line = raw_line.strip()
+
+                  if not line:
+                      continue
+
+                  if line.startswith("#"):
+                      continue
+
+                  # 删除行内注释
+                  if "#" in line:
+                      line = line.split("#", 1)[0].strip()
+
+                  if not line:
+                      continue
+
+                  parts = [p.strip() for p in line.split(",")]
+
+                  # 标准 Surge 规则，例如：
+                  # DOMAIN-SUFFIX,qq.com
+                  # DOMAIN,weixin.qq.com
+                  # DOMAIN-KEYWORD,bilibili
+                  # IP-CIDR,1.0.1.0/24,no-resolve
+                  if len(parts) >= 2:
+                      rule_type = parts[0].upper()
+                      value = parts[1].strip()
+
+                      if not value:
+                          continue
+
+                      if rule_type == "DOMAIN-SUFFIX":
+                          domains.add(f"domain:{value}")
+
+                      elif rule_type == "DOMAIN":
+                          domains.add(f"full:{value}")
+
+                      elif rule_type == "DOMAIN-KEYWORD":
+                          domains.add(f"keyword:{value}")
+
+                      elif rule_type == "DOMAIN-REGEX":
+                          domains.add(f"regexp:{value}")
+
+                      elif rule_type in ["IP-CIDR", "IP-CIDR6"]:
+                          ips.add(value)
+
+                  # 兼容纯域名格式，例如：
+                  # qq.com
+                  # baidu.com
+                  else:
+                      if "." in line and "/" not in line:
+                          domains.add(f"domain:{line}")
+
+          result = {
+              "domainStrategy": "AsIs",
+              "rules": [
+                  {
+                      "type": "field",
+                      "outboundTag": "direct",
+                      "domain": sorted(domains),
+                      "ip": sorted(ips)
+                  }
+              ]
+          }
+
+          with open(output_file, "w", encoding="utf-8") as f:
+              json.dump(result, f, ensure_ascii=False, indent=2)
+
+          print(f"v2rayN 规则生成完成：{output_file}")
+          print(f"domain 数量：{len(domains)}")
+          print(f"ip 数量：{len(ips)}")
+          PY
 
       - name: Push to Repository
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-          git add cn_merged.txt
+          git add cn_merged.txt v2rayn_cn_direct.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update: $(date)"
+            git commit -m "Update rules: $(date)"
             git push origin main
           fi
