@@ -21,7 +21,7 @@ jobs:
 
       - name: Download and Merge Surge Rules
         run: |
-          rm -f temp.txt cn_merged.txt v2rayn_cn_direct.json
+          rm -f temp.txt cn_merged.txt v2rayn_cn_direct.json v2rayn_import_rules.json
 
           # 1. China_All
           curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All.list" >> temp.txt
@@ -62,7 +62,6 @@ jobs:
           # - 修复极少数情况下 no-resolveIP-CIDR 被拼接的问题
           # - 删除注释和空行
           # - 去掉策略字段 DIRECT / REJECT / PROXY
-          # - 保留 DOMAIN / DOMAIN-SUFFIX / DOMAIN-KEYWORD / IP-CIDR / IP-CIDR6
           # - 去重排序
           sed 's/\r$//' temp.txt \
             | sed 's/no-resolveIP-CIDR/no-resolve\nIP-CIDR/g' \
@@ -87,7 +86,9 @@ jobs:
           import json
 
           input_file = "cn_merged.txt"
-          output_file = "v2rayn_cn_direct.json"
+
+          output_xray_file = "v2rayn_cn_direct.json"
+          output_import_file = "v2rayn_import_rules.json"
 
           domains = set()
           ips = set()
@@ -145,24 +146,54 @@ jobs:
                       if "." in line and "/" not in line:
                           domains.add(f"domain:{line}")
 
-          result = {
+          sorted_domains = sorted(domains)
+          sorted_ips = sorted(ips)
+
+          # 1. Xray 原生 routing 格式
+          # 这个文件适合手动放进 Xray routing 配置里
+          xray_result = {
               "domainStrategy": "AsIs",
               "rules": [
                   {
                       "type": "field",
                       "outboundTag": "direct",
-                      "domain": sorted(domains),
-                      "ip": sorted(ips)
+                      "domain": sorted_domains,
+                      "ip": sorted_ips
                   }
               ]
           }
 
-          with open(output_file, "w", encoding="utf-8") as f:
-              json.dump(result, f, ensure_ascii=False, indent=2)
+          with open(output_xray_file, "w", encoding="utf-8") as f:
+              json.dump(xray_result, f, ensure_ascii=False, indent=2)
 
-          print(f"v2rayN 规则生成完成：{output_file}")
-          print(f"domain 数量：{len(domains)}")
-          print(f"ip 数量：{len(ips)}")
+          # 2. v2rayN 图形界面导入格式
+          # 这个文件用于 v2rayN 的：
+          # 规则集设置 -> 从文件中导入规则
+          import_rules = []
+
+          if sorted_domains:
+              import_rules.append({
+                  "enabled": True,
+                  "remarks": "大陆域名直连",
+                  "outboundTag": "direct",
+                  "domain": sorted_domains
+              })
+
+          if sorted_ips:
+              import_rules.append({
+                  "enabled": True,
+                  "remarks": "大陆IP直连",
+                  "outboundTag": "direct",
+                  "ip": sorted_ips
+              })
+
+          with open(output_import_file, "w", encoding="utf-8") as f:
+              json.dump(import_rules, f, ensure_ascii=False, indent=2)
+
+          print(f"Xray routing 规则生成完成：{output_xray_file}")
+          print(f"v2rayN 导入规则生成完成：{output_import_file}")
+          print(f"domain 数量：{len(sorted_domains)}")
+          print(f"ip 数量：{len(sorted_ips)}")
           PY
 
       - name: Push to Repository
@@ -170,7 +201,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-          git add cn_merged.txt v2rayn_cn_direct.json
+          git add cn_merged.txt v2rayn_cn_direct.json v2rayn_import_rules.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
