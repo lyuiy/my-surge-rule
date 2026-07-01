@@ -10666,6 +10666,7 @@ DOMAIN-SUFFIX,explorespanking.com
 DOMAIN-SUFFIX,expofutures.com
 DOMAIN-SUFFIX,exporntoons.net
 DOMAIN-SUFFIX,exposedlatinas.com
+DOMAIN-SUFFIX,expressnews.com
 DOMAIN-SUFFIX,expressvpn.com
 DOMAIN-SUFFIX,expresswifi.com
 DOMAIN-SUFFIX,exrates.me
