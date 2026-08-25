@@ -2364,6 +2364,7 @@ DOMAIN-SUFFIX,api.mixpanel.com
 DOMAIN-SUFFIX,api.moomoobull.com
 DOMAIN-SUFFIX,api.nebula-emby.com
 DOMAIN-SUFFIX,api.news
+DOMAIN-SUFFIX,api.shuaiapi.com
 DOMAIN-SUFFIX,apiary.io
 DOMAIN-SUFFIX,apiauto.ru
 DOMAIN-SUFFIX,apibay.org
@@ -14923,7 +14924,6 @@ DOMAIN-SUFFIX,hp-invent.info
 DOMAIN-SUFFIX,hp-mns.com
 DOMAIN-SUFFIX,hp-printing.com
 DOMAIN-SUFFIX,hp-webplatform.com
-DOMAIN-SUFFIX,hp-ww.com
 DOMAIN-SUFFIX,hp.company
 DOMAIN-SUFFIX,hp.io
 DOMAIN-SUFFIX,hp3d.com
@@ -33267,6 +33267,7 @@ DOMAIN-SUFFIX,x365x.com
 DOMAIN-SUFFIX,x3guide.com
 DOMAIN-SUFFIX,x3vid.com
 DOMAIN-SUFFIX,x6av.com
+DOMAIN-SUFFIX,x86.fr
 DOMAIN-SUFFIX,x99av.com
 DOMAIN-SUFFIX,x9wang.com
 DOMAIN-SUFFIX,xacmbq.xyz
