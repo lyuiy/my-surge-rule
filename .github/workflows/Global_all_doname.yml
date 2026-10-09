@@ -20,7 +20,7 @@ jobs:
       - name: Download and Merge
         run: |
           # 1.  Spotify 链接
-          https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Spotify/Spotify.list
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Spotify/Spotify.list" > temp.txt
           
           # 2.  谷歌 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Google/Google.list" >> temp.txt
@@ -53,7 +53,7 @@ jobs:
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Twitter/Twitter.list" >> temp.txt
 
           # 12. 全球代理-链接大全
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" > temp.txt
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" >> temp.txt
 
 
           
