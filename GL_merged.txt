@@ -11,6 +11,7 @@ DOMAIN,aqi.aqicn.org
 DOMAIN,asahishimbun.sc.omtrdc.net
 DOMAIN,assets1.xboxlive.com
 DOMAIN,assets2.xboxlive.com
+DOMAIN,audio4-ak-spotify-com.akamaized.net
 DOMAIN,az416426.vo.msecnd.net
 DOMAIN,az668014.vo.msecnd.net
 DOMAIN,az764295.vo.msecnd.net
@@ -45,6 +46,7 @@ DOMAIN,github-api.arkoselabs.com
 DOMAIN,gog-cdn-lumen.secure2.footprint.net
 DOMAIN,gog.qtlglb.com
 DOMAIN,hb4bbbbb.pmhcjk.com
+DOMAIN,heads-ak-spotify-com.akamaized.net
 DOMAIN,holoxx.f5.si
 DOMAIN,hpstore.corpmerchandise.com
 DOMAIN,hub.slarker.me
@@ -103,6 +105,9 @@ DOMAIN,rsshub.umzzz.com
 DOMAIN,rsshub.woodland.cafe
 DOMAIN,rsshub2.asailor.org
 DOMAIN,sberpro.vedomosti.ru
+DOMAIN,spotify.com.edgesuite.net
+DOMAIN,spotify.map.fastly.net
+DOMAIN,spotify.map.fastlylb.net
 DOMAIN,standchartbank.sc.omtrdc.net
 DOMAIN,standchartbank.tt.omtrdc.net
 DOMAIN,straitsx-826709081262441084-b790f87a2ae6fd417434295.freshchat.com
@@ -3130,6 +3135,7 @@ DOMAIN-SUFFIX,audelondon.ac.uk
 DOMAIN-SUFFIX,audible.com
 DOMAIN-SUFFIX,audiencenetwork.com
 DOMAIN-SUFFIX,audiencenetwork.tv
+DOMAIN-SUFFIX,audio-ak-spotify-com.akamaized.net
 DOMAIN-SUFFIX,audiobeatsau.com
 DOMAIN-SUFFIX,audiobeatsbydre.com
 DOMAIN-SUFFIX,audiomonsterbeatsonline.com
@@ -14185,6 +14191,7 @@ DOMAIN-SUFFIX,headphonesol.com
 DOMAIN-SUFFIX,headphonesretailer.com
 DOMAIN-SUFFIX,headphonessupply.com
 DOMAIN-SUFFIX,headphonezip.com
+DOMAIN-SUFFIX,heads4-ak-spotify-com.akamaized.net
 DOMAIN-SUFFIX,headset987.com
 DOMAIN-SUFFIX,headteachers.ac.uk
 DOMAIN-SUFFIX,health.ac.uk
@@ -28152,7 +28159,9 @@ DOMAIN-SUFFIX,sportswomanoftheyear.co.uk
 DOMAIN-SUFFIX,sportswomenoftheyear.co.uk
 DOMAIN-SUFFIX,spotflux.com
 DOMAIN-SUFFIX,spoti.fi
+DOMAIN-SUFFIX,spotify-com.akamaized.net
 DOMAIN-SUFFIX,spotify-everywhere.com
+DOMAIN-SUFFIX,spotify.app.link
 DOMAIN-SUFFIX,spotify.com
 DOMAIN-SUFFIX,spotify.design
 DOMAIN-SUFFIX,spotify.link
@@ -28163,6 +28172,8 @@ DOMAIN-SUFFIX,spotifycodes.com
 DOMAIN-SUFFIX,spotifyforbrands.com
 DOMAIN-SUFFIX,spotifyforvendors.com
 DOMAIN-SUFFIX,spotifyjobs.com
+DOMAIN-SUFFIX,spotifynewsroom.jp
+DOMAIN-SUFFIX,spotilocal.com
 DOMAIN-SUFFIX,spr.ac.uk
 DOMAIN-SUFFIX,spraynwash.com
 DOMAIN-SUFFIX,spreadporn.org
@@ -34980,6 +34991,7 @@ IP-CIDR,103.2.28.0/22
 IP-CIDR,103.246.56.0/22
 IP-CIDR,103.27.148.0/22
 IP-CIDR,103.4.96.0/22
+IP-CIDR,104.154.127.126/32,no-resolve
 IP-CIDR,108.175.32.0/20
 IP-CIDR,109.239.140.0/24
 IP-CIDR,110.76.140.0/22
@@ -35055,6 +35067,7 @@ IP-CIDR,31.13.64.0/18
 IP-CIDR,34.224.0.0/12
 IP-CIDR,35.157.215.84/32
 IP-CIDR,35.157.217.255/32
+IP-CIDR,35.186.224.47/32,no-resolve
 IP-CIDR,37.77.184.0/21
 IP-CIDR,45.57.0.0/17
 IP-CIDR,45.64.40.0/22
@@ -35093,6 +35106,7 @@ IP-CIDR6,2001:b28:f23c::/47
 IP-CIDR6,2001:b28:f23f::/48
 IP-CIDR6,2a0a:f280::/32
 PROCESS-NAME,LookupViewService
+PROCESS-NAME,com.spotify.music
 USER-AGENT,AbemaTV*
 USER-AGENT,All4*
 USER-AGENT,Anime*
