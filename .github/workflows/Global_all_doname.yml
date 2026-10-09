@@ -19,8 +19,8 @@ jobs:
 
       - name: Download and Merge
         run: |
-          # 1. 全球代理-链接大全
-          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" > temp.txt
+          # 1.  Spotify 链接
+          https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Spotify/Spotify.list
           
           # 2.  谷歌 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Google/Google.list" >> temp.txt
@@ -34,8 +34,8 @@ jobs:
           # 5.  telegram 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Telegram/Telegram.list" >> temp.txt
 
-          # 6.  discord 链接
-          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
+          # 6.  OpenAI_Resolve 链接
+          #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/OpenAI/OpenAI_Resolve.listt" >> temp.txt
 
           # 7.  discord 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list" >> temp.txt
@@ -43,7 +43,7 @@ jobs:
           # 8.  github 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list" >> temp.txt
 
-          # 9.  github 链接
+          # 9.  Gemini 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Gemini/Gemini.list" >> temp.txt
 
           # 10.  Cloudflare 链接
@@ -51,6 +51,9 @@ jobs:
 
           # 11.  Twitter 链接
           #curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Twitter/Twitter.list" >> temp.txt
+
+          # 12. 全球代理-链接大全
+          curl -sL --retry 3 "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Global/Global_All.list" > temp.txt
 
 
           
