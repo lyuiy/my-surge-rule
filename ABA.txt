@@ -7,8 +7,6 @@ e2cq9m.cdn-settings.appsflyersdk.com
 e2cq9m.launches.appsflyersdk.com
 fcmtoken.googleapis.com
 firebaseremoteconfigrealtime.googleapis.com
-itunes.apple.com
 mapp.ababank.com
 play.googleapis.com
-www.apple.com
 www.googleapis.com
